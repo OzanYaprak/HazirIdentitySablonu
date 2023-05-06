@@ -18,7 +18,7 @@ namespace AspNetCoreIdentityApp.CustomValidations
             {
                 errors.Add(new IdentityError()
                 {
-                    Code="PasswordNotContainsUserName",
+                    Code="PasswordContainsUserName",
                     Description="Kullanıcı adı şifre belirlemede kullanılamaz."
                 });
             }

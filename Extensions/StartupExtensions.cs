@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentityApp.Data;
+﻿using AspNetCoreIdentityApp.CustomValidations;
+using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -20,7 +21,7 @@ namespace AspNetCoreIdentityApp.Extensions
                 options.Password.RequireDigit = true;
 
 
-            }).AddEntityFrameworkStores<AppDBContext>();
+            }).AddPasswordValidator<PasswordValidator>().AddEntityFrameworkStores<AppDBContext>();
         }
     }
 }

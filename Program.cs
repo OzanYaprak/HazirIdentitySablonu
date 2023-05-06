@@ -1,4 +1,5 @@
 using AspNetCoreIdentityApp.Data;
+using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,9 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conn"));
 });
 
-builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDBContext>();
 
+//Extensions içinde StartupExtensions altýnda yazýlý.
+builder.Services.IdentityExtensions();
 
 
 

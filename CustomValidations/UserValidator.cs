@@ -12,6 +12,9 @@ namespace AspNetCoreIdentityApp.CustomValidations
 
             var isDigit = int.TryParse(user.UserName[0].ToString(), out _);
 
+
+
+
             if (isDigit)
             {
                 errors.Add(new IdentityError()

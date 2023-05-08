@@ -1,5 +1,6 @@
 ﻿using AspNetCoreIdentityApp.CustomValidations;
 using AspNetCoreIdentityApp.Data;
+using AspNetCoreIdentityApp.Localizations;
 using AspNetCoreIdentityApp.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -20,8 +21,14 @@ namespace AspNetCoreIdentityApp.Extensions
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
 
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+                options.Lockout.MaxFailedAccessAttempts = 5;
 
-            }).AddUserValidator<UserValidator>().AddPasswordValidator<PasswordValidator>().AddEntityFrameworkStores<AppDBContext>();
+            })
+                .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+                .AddUserValidator<UserValidator>()
+                .AddPasswordValidator<PasswordValidator>()
+                .AddEntityFrameworkStores<AppDBContext>();
         }
     }
 }

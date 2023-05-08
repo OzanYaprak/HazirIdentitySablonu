@@ -4,6 +4,7 @@ namespace AspNetCoreIdentityApp.ViewModels
 {
     public class SignUpViewModel
     {
+
         [Required(ErrorMessage ="Kullanıcı adı boş bırakılamaz.")]
         [Display(Name ="Kullanıcı Adı: ")]
         public string UserName { get; set; }

@@ -2,6 +2,7 @@
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Localizations;
 using AspNetCoreIdentityApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AspNetCoreIdentityApp.Extensions
@@ -28,7 +29,50 @@ namespace AspNetCoreIdentityApp.Extensions
                 .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
                 .AddUserValidator<UserValidator>()
                 .AddPasswordValidator<PasswordValidator>()
-                .AddEntityFrameworkStores<AppDBContext>();
+                .AddEntityFrameworkStores<AppDBContext>()
+                .AddDefaultTokenProviders(); //şifremi unuttum için identity kütüp. ile gelen default token üretmek için yazıldı.
+
+
+
+
+            //şifre sıfırlamada üretilecek token ayarları
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                //şifre sıfırlamada üretilen tokenın süresi 1 saat olarak ayarlandı.
+                options.TokenLifespan = TimeSpan.FromHours(1);
+            });
+
+        }
+
+
+
+
+
+
+        public static void CookieExtensions(this IServiceCollection services)
+        {
+            //Cookie işlemleri
+            services.ConfigureApplicationCookie(options =>
+            {
+                var cookieBuilder = new CookieBuilder();
+
+                //cookie isim verme
+                cookieBuilder.Name = "IdentityAppCookie";
+
+                //kullanıcı girişi için oluşturulan path
+                options.LoginPath = new PathString("/Home/SignIn");
+
+                //kullanıcı çıkışı için oluşturulan path
+                options.LogoutPath = new PathString("/Member/Logout");
+
+                options.Cookie = cookieBuilder;
+
+                //cookienin kaç gün tutulacağı
+                options.ExpireTimeSpan = TimeSpan.FromDays(90);
+
+                //kullanıcı siteye her giriş yaptığında cookie süresi otomatik olarak +90 gün ilave edilip uzatılacak. false bırakılırsa 90 gün sonunda cookie otomatik silinecek.
+                options.SlidingExpiration = true; // 
+            });
         }
     }
 }

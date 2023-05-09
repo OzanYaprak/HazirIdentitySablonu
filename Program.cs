@@ -1,7 +1,9 @@
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +17,12 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 });
 
 
+
+
 //Extensions içinde StartupExtensions altýnda yazýlý.
 builder.Services.IdentityExtensions();
+builder.Services.CookieExtensions();
+
 
 
 
@@ -36,6 +42,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//Kimlik doðrulamasý için yazýlan middleware (facebook,google ile giriþ yapmak içinde bu middleware gerekli)
+app.UseAuthentication();
+
+//Kimlik yetkilendirmesi için yazýlan middleware
 app.UseAuthorization();
 
 //admin paneli için (admin sayfasý) yazýldý.

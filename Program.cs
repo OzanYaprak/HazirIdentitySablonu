@@ -1,6 +1,7 @@
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
+using AspNetCoreIdentityApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,12 +18,22 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 });
 
 
+//Email servisi için eklendi.
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 
 //Extensions içinde StartupExtensions altýnda yazýlý.
 builder.Services.IdentityExtensions();
 builder.Services.CookieExtensions();
 
+
+//security stamp yenilenme süresi (default 30dk da býrakýldý)
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(30);
+});
 
 
 

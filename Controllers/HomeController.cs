@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentityApp.Extensions;
+using AspNetCoreIdentityApp.Services;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -12,14 +13,15 @@ namespace AspNetCoreIdentityApp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
 
 
-
-        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -109,6 +111,10 @@ namespace AspNetCoreIdentityApp.Controllers
 
 
 
+
+
+
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
@@ -131,14 +137,16 @@ namespace AspNetCoreIdentityApp.Controllers
             {
                 userID = loginUser.Id,
                 passwordResetToken = passwordResetToken
-            });
+            }, HttpContext.Request.Scheme);
+
+
+            await _emailService.SendPasswordResetEmail(passwordResetLink, loginUser.Email);
+
+
 
             TempData["PasswordResetSuccess"] = "Şifre yenileme bağlantısı tarafınıza mail olarak gönderilmiştir.";
 
             return RedirectToAction(nameof(ForgotPassword));
-
-
-            //pttphgmcplfdraxz
         }
 
 
@@ -148,8 +156,49 @@ namespace AspNetCoreIdentityApp.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult ResetPassword(string userID, string passwordResetToken)
+        {
+            TempData["userID"] = userID;
+            TempData["passwordResetToken"] = passwordResetToken;
 
 
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel request)
+        {
+            var userID = TempData["userID"];
+            var passwordResetToken = TempData["passwordResetToken"];
+
+            if (userID == null || passwordResetToken == null)
+            {
+                throw new Exception("Bir hata meydana geldi.");
+            }
+
+
+            var loginUser = await _userManager.FindByIdAsync(userID.ToString());
+
+            if (loginUser == null)
+            {
+                ModelState.AddModelError(string.Empty, "Kullanıcı Bulunamamıştır.");
+                return View();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(loginUser, passwordResetToken.ToString(), request.Password);
+
+            if (result.Succeeded)
+            {
+                TempData["PasswordResetSucceedMessage"] = "Şifreniz başarıyla yenilenmiştir.";
+            }
+            else
+            {
+                ModelState.AddModelErrorList(result.Errors.Select(a => a.Description).ToList());
+            }
+
+            return View();
+        }
 
 
 

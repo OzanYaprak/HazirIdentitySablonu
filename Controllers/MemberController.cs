@@ -4,6 +4,7 @@ using AspNetCoreIdentityApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -34,10 +35,21 @@ namespace AspNetCoreIdentityApp.Controllers
         }
 
 
+
+
+
+
+
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
         }
+
+
+
+
+
+
 
         [HttpGet]
         public IActionResult PasswordChange()
@@ -87,5 +99,30 @@ namespace AspNetCoreIdentityApp.Controllers
 
             return View();
         }
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> UserEdit()
+        {
+            ViewBag.genderList = new SelectList(Enum.GetNames(typeof(Gender)));
+
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userEditViewModel = new UserEditViewModel()
+            {
+                UserName = currentUser.UserName,
+                Email = currentUser.Email,
+                Phone = currentUser.PhoneNumber,
+                City = currentUser.City,
+                DateOfBirth = currentUser.DateOfBirth,
+                Gender = currentUser.Gender
+            };
+
+            return View(userEditViewModel);
+        }
+
     }
 }

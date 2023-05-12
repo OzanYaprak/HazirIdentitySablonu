@@ -23,14 +23,14 @@ namespace AspNetCoreIdentityApp.CustomValidations
                 });
             }
 
-            if (password.Length < 8)
-            {
-                errors.Add(new IdentityError()
-                {
-                    Code = "PasswordTooShort",
-                    Description = "Şifreniz en az 8 karakter uzunluğunda olmalıdır."
-                });
-            }
+            //if (password.Length < 8)
+            //{
+            //    errors.Add(new IdentityError()
+            //    {
+            //        Code = "PasswordTooShort",
+            //        Description = "Şifreniz en az 8 karakter uzunluğunda olmalıdır."
+            //    });
+            //}
 
             // Yaygın şifreler kontrolü
             if (commonPasswords.Contains(password.ToLower()))

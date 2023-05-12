@@ -14,7 +14,6 @@ namespace AspNetCoreIdentityApp.Services
         public EmailService(IOptions<EmailSettings> settings)
         {
             _emailsettings = settings.Value;
-
         }
 
         public async Task SendPasswordResetEmail(string passwordResetLink, string receiver)
@@ -34,7 +33,7 @@ namespace AspNetCoreIdentityApp.Services
 
             mailMessage.Subject = "Identity Şifre Sıfırlama Bağlantısı";
             mailMessage.Body =
-                @$" 
+                @$" <h3>Merhaba Sayın Kullanıcı</h3>
                     <h4>Şifrenizi yenilemek için aşağıdaki bağlantıya tıklayınız.</h4>
                     <p><a href='{passwordResetLink}'>Tıklayınız.</a></p>";
             

@@ -79,6 +79,11 @@ namespace AspNetCoreIdentityApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel model, string returnUrl = null)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
 
             var loginUser = await _userManager.FindByEmailAsync(model.Email);
@@ -176,7 +181,6 @@ namespace AspNetCoreIdentityApp.Controllers
             {
                 throw new Exception("Bir hata meydana geldi.");
             }
-
 
             var loginUser = await _userManager.FindByIdAsync(userID.ToString());
 

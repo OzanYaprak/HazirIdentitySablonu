@@ -2,6 +2,8 @@
 
 namespace AspNetCoreIdentityApp.Localizations
 {
+    //JQERY VALIDASYONLARINI EZMEK İÇİN YAZILDI
+
     public class LocalizationIdentityErrorDescriber : IdentityErrorDescriber
     {
         public override IdentityError DuplicateUserName(string userName)
@@ -26,7 +28,12 @@ namespace AspNetCoreIdentityApp.Localizations
 
         public override IdentityError PasswordRequiresUpper()
         {
-            return new IdentityError { Code = "PasswordRequiresNonAlphanumeric", Description = "Şifreniz en az bir büyük içermelidir." };
+            return new IdentityError { Code = "PasswordRequiresUpper", Description = "Şifreniz en az bir büyük harf içermelidir." };
+        }
+
+        public override IdentityError PasswordRequiresLower()
+        {
+            return new IdentityError { Code = "PasswordRequiresLower", Description = "Şifreniz en az bir küçük harf içermelidir." };
         }
     }
 }

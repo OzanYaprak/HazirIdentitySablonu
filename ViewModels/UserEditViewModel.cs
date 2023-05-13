@@ -23,7 +23,7 @@ namespace AspNetCoreIdentityApp.ViewModels
 
         [DataType(DataType.Date, ErrorMessage = "Geçersiz tarih formatı.")]
         [Display(Name = "Doğum Tarihi")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}", NullDisplayText = "Tarih bilgisi yok.")]
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:dd/MM/yyyy}", NullDisplayText = "Tarih bilgisi yok.")]
         public DateTime DateOfBirth { get; set; }
 
         [StringLength(50, ErrorMessage = "Şehir alanı en fazla 50 karakter olabilir.")]

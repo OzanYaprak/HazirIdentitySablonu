@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -29,9 +30,10 @@ namespace AspNetCoreIdentityApp.Controllers
 
             var userViewModel = new UserViewModel
             {
-                UserName = currentUser!.UserName,
-                Email = currentUser!.Email,
-                PhoneNumber = currentUser!.PhoneNumber
+                UserName = currentUser.UserName,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber,
+                PictureURL = currentUser.Picture
             };
 
             return View(userViewModel);
@@ -150,7 +152,7 @@ namespace AspNetCoreIdentityApp.Controllers
             if (request.Picture != null && request.Picture.Length > 0)
             {
                 var wwwroot = _fileProvider.GetDirectoryContents("wwwroot");
-                var randomFileName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(request.Picture.FileName)}"; // .jpg .png vs vs.
+                var randomFileName = $"{Guid.NewGuid()}{Path.GetExtension(request.Picture.FileName)}"; // .jpg .png vs vs. / NewGuid().ToString() kaldırıldı sorun çıkarsa ekle
                 var newPicturePath = Path.Combine(wwwroot.First(a => a.Name == "userpictures").PhysicalPath, randomFileName);
 
                 using var stream = new FileStream(newPicturePath, FileMode.Create);

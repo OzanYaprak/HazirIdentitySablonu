@@ -2,16 +2,35 @@
 @{
     ViewData["Title"] = "Index";
 }
+<h1 class="text-center mb-5">Kullanıcı Bilgileri</h1>
 
-<h1>Kullanıcı Bilgileri</h1>
+<div class="row">
+    <div class="col-md-4 offset-md-4 d-flex justify-content-center align-content-center">
 
-<div class="table-responsive">
-    <table class="table">
-        <thead>
+        @*TagHelpers klasörünün altında yazmış olduğumuz UserPictureThumbnailTagHelper adlı tag helper*@
+        <user-picture-thumbnail picture-url="@Model.PictureURL" class="rounded" width="150"></user-picture-thumbnail>
+
+
+
+        @*ESKİ YÖNTEM*@
+        @*@if (string.IsNullOrEmpty(Model.PictureURL))
+        {
+        <img class="rounded" width="150" src="/userpictures/default_profile_picture.png" />
+        }
+        else
+        {
+        <img class="rounded" width="150" src="/userpictures/@(Model.PictureURL)" />
+        }*@
+    </div>
+</div>
+
+<div class="table-responsive mt-5">
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
             <tr>
-                <th>Kullanıcı Adı</th>
-                <th>Email</th>
-                <th>Telefon</th>
+                <th scope="col">Kullanıcı Adı</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefon</th>
             </tr>
         </thead>
         <tbody>

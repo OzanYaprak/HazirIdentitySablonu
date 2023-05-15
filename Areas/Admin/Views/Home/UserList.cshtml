@@ -3,25 +3,29 @@
     ViewData["Title"] = "UserList";
 }
 
-<h1>Kayıtlı Kullanıcılar</h1>
+<h1 class="text-center">Kayıtlı Kullanıcılar</h1>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>KULLANICI ADI</th>
-            <th>EMAİL</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="align-middle" style="text-align:center;">
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>@item.UserID</td>
-                <td>@item.UserName</td>
-                <td>@item.UserEmail</td>
+                <th>KULLANICI RESMİ</th>
+                <th>ID</th>
+                <th>KULLANICI ADI</th>
+                <th>EMAİL</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><user-picture-thumbnail picture-url="@item.PictureURL" class="rounded-3 align-middle" width="50"></user-picture-thumbnail></td>
+                    <td class="align-middle">@item.UserID</td>
+                    <td class="align-middle">@item.UserName</td>
+                    <td class="align-middle">@item.UserEmail</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

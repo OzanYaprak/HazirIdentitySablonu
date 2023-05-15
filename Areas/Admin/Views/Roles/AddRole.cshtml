@@ -1,0 +1,42 @@
+﻿@model AddRoleViewModel
+
+@{
+    ViewData["Title"] = "AddRole";
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h1 class="text-center mb-4">Ünvan Ekleme</h1>
+            <form asp-controller="Roles" asp-action="AddRole" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="RoleName" class="form-control" placeholder="Ünvan adı" />
+                    <label asp-for="RoleName">Ünvan adı</label>
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+                <div class="form-group d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-4">
+            <div class="d-grid gap-2">
+                <a asp-action="Index" class="btn btn-secondary">Ünvan Listesi</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

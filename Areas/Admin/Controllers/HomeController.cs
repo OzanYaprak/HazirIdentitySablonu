@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Areas.Admin.Models;
+﻿using AspNetCoreIdentityApp.Areas.Admin.ViewModels;
 using AspNetCoreIdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +30,8 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             {
                 UserID = a.Id,
                 UserName = a.UserName,
-                UserEmail = a.Email
+                UserEmail = a.Email,
+                PictureURL = a.Picture
             }).ToList();
 
 

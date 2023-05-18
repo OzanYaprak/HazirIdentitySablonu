@@ -1,7 +1,7 @@
-﻿@model AddRoleViewModel
+﻿@model CreateRoleViewModel
 
 @{
-    ViewData["Title"] = "AddRole";
+    ViewData["Title"] = "CreateRole";
 }
 @section Scripts {
     @{
@@ -22,7 +22,7 @@
                 </div>
             }
 
-            <form asp-controller="Roles" asp-action="AddRole" method="post">
+            <form asp-controller="Roles" asp-action="CreateRole" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating mb-3">
                     <input asp-for="RoleName" class="form-control" placeholder="Ünvan adı" />

@@ -38,13 +38,13 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult AddRole()
+        public IActionResult CreateRole()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRole(AddRoleViewModel request)
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel request)
         {
             var result = await _roleManager.CreateAsync(new AppRole() { Name = request.RoleName });
 
@@ -142,6 +142,8 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
         public async Task<IActionResult> AssingRole(string id)
         {
             var currentUser = await _userManager.FindByIdAsync(id);
+            ViewBag.userid = id;
+
             var roles = await _roleManager.Roles.ToListAsync();
             var roleViewModelList = new List<AssingRoleViewModel>();
             var userRoles = await _userManager.GetRolesAsync(currentUser);
@@ -165,6 +167,27 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
             
             return View(roleViewModelList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssingRole(string id ,List<AssingRoleViewModel> requestList)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            foreach (var role in requestList)
+            {
+                if (role.Exist)
+                {
+                    await _userManager.AddToRoleAsync(user, role.RoleName);
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                }
+            }
+
+
+            return RedirectToAction(nameof(HomeController.UserList),"Home");
         }
     }
 }

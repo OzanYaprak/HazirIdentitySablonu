@@ -1,8 +1,57 @@
-﻿
+﻿@model List<RoleViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<a asp-controller="Roles" asp-action="AddRole" asp-area="Admin" class="btn btn-success">Ünvan Ekle</a>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="mb-0">ÜNVAN LİSTESİ</h1>
+                <a asp-controller="Roles" asp-action="AddRole" asp-area="Admin" class="btn btn-success mb-3">Ünvan Ekle</a>
+            </div>
+        </div>
+
+        <div class="col-md-12 align-middle" style="text-align:center;">
+
+            @if (TempData["SucceededMessage"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SucceededMessage"]
+                </div>
+            }
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>ÜNVAN ADI</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var role in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">@role.RoleID</td>
+                                <td class="align-middle">@role.RoleName</td>
+                                <td class="align-middle">
+                                    <a asp-controller="Roles" asp-action="UpdateRole" asp-area="Admin" asp-route-id="@role.RoleID" class="btn btn-sm btn-warning">Güncelle</a>
+                                    <a asp-controller="Roles" asp-action="DeleteRole" asp-area="Admin" asp-route-id="@role.RoleID" class="btn btn-sm btn-danger my-1">Sil</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

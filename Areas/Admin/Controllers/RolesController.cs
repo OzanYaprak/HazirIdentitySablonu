@@ -3,6 +3,8 @@ using AspNetCoreIdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreIdentityApp.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Azure.Core;
 
 namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 {
@@ -18,10 +20,20 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var roles = await _roleManager.Roles.Select(a => new RoleViewModel()
+            {
+                RoleID = a.Id,
+                RoleName = a.Name
+            }).ToListAsync();
+
+            return View(roles);
         }
+
+
+
+
 
 
 
@@ -42,7 +54,117 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
                 return View();
             }
 
+            TempData["SucceededMessage"] = "Ünvan Başarıyla Eklenmiştir.";
+
             return RedirectToAction(nameof(RolesController.Index));
+        }
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateRole(string id)
+        {
+            var roleToUpdate = await _roleManager.FindByIdAsync(id);
+
+            if (roleToUpdate == null)
+            {
+                throw new Exception("Ünvan Bulunamamıştır");
+            }
+
+
+            return View(new UpdateRoleViewModel()
+            {
+                RoleID = roleToUpdate.Id,
+                RoleName = roleToUpdate.Name
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRole(UpdateRoleViewModel request)
+        {
+            var roleToUpdate = await _roleManager.FindByIdAsync(request.RoleID);
+
+            if (roleToUpdate == null)
+            {
+                throw new Exception("Ünvan Bulunamamıştır");
+            }
+
+            roleToUpdate.Name = request.RoleName;
+
+            await _roleManager.UpdateAsync(roleToUpdate);
+
+            TempData["SucceededMessage"] = "Ünvan Başarıyla Güncellenmiştir.";
+
+            return View();
+        }
+
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var roleToDelete = await _roleManager.FindByIdAsync(id);
+
+
+            if (roleToDelete == null)
+            {
+                throw new Exception("Ünvan Bulunamamıştır");
+            }
+
+           var result = await _roleManager.DeleteAsync(roleToDelete);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.Select(a => a.Description).First());
+            }
+
+            TempData["SucceededMessage"] = "Ünvan Başarıyla Silinmiştir.";
+
+            return RedirectToAction(nameof(RolesController.Index));
+        }
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> AssingRole(string id)
+        {
+            var currentUser = await _userManager.FindByIdAsync(id);
+            var roles = await _roleManager.Roles.ToListAsync();
+            var roleViewModelList = new List<AssingRoleViewModel>();
+            var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+            foreach (var role in roles)
+            {
+                var assingRoleViewModel = new AssingRoleViewModel() 
+                {
+                    RoleID = role.Id,
+                    RoleName = role.Name
+                };
+
+
+                if (userRoles.Contains(role.Name))
+                {
+                    assingRoleViewModel.Exist = true;
+                }
+
+                roleViewModelList.Add(assingRoleViewModel);
+            }
+
+            
+            return View(roleViewModelList);
         }
     }
 }

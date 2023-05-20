@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using AspNetCoreIdentityApp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 {
@@ -20,6 +21,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var roles = await _roleManager.Roles.Select(a => new RoleViewModel()
@@ -36,13 +38,14 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel request)
         {
@@ -66,7 +69,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> UpdateRole(string id)
         {
@@ -85,6 +88,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UpdateRoleViewModel request)
         {
@@ -109,7 +113,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> DeleteRole(string id)
         {
@@ -137,7 +141,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> AssingRole(string id)
         {
@@ -169,6 +173,7 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             return View(roleViewModelList);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AssingRole(string id ,List<AssingRoleViewModel> requestList)
         {

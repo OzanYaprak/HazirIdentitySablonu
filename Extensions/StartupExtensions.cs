@@ -65,6 +65,9 @@ namespace AspNetCoreIdentityApp.Extensions
                 //kullanıcı çıkışı için oluşturulan path
                 options.LogoutPath = new PathString("/Member/Logout");
 
+                //AccessDenied sayfası için path oluşturuldu
+                options.AccessDeniedPath = new PathString("/Member/AccessDenied");
+
                 options.Cookie = cookieBuilder;
 
                 //cookienin kaç gün tutulacağı

@@ -14,6 +14,7 @@
                 <th>KULLANICI ADI</th>
                 <th>EMAİL</th>
                 <th>ÜNVAN</th>
+                <th>KULLANICI İŞLEMLERİ</th>
             </tr>
         </thead>
 
@@ -25,6 +26,9 @@
                     <td class="align-middle">@item.UserID</td>
                     <td class="align-middle">@item.UserName</td>
                     <td class="align-middle">@item.UserEmail</td>
+                    <td class="align-middle">
+                        <user-role-names user-id="@item.UserID"></user-role-names>
+                    </td>
                     <td class="align-middle">
                         <a asp-controller="Roles" asp-action="AssingRole" asp-route-id="@item.UserID" class="btn btn-info">Ünvan Ata</a>
                     </td>

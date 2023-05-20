@@ -20,6 +20,18 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conn"));
 });
 
+//Policy tanýmlama için yazýldý --BÝR POLICY ÝÇERÝSÝNDE BÝRDEN FAZLA KURAL YAZILABÝLÝNÝR.
+builder.Services.AddAuthorization(options =>
+{
+    //ÝstanbulPolicy tanýmlamasý yaptýðýmýz alanlarý city bilgisi istanbul ve ankara olan kullanýcýlar görebilecek veya,
+    //Ankarayý silip sadece istanbul olarakta yapabilir veya daha fazla þehir ekleyebiliriz.
+    options.AddPolicy("ÝstanbulPolicy", policy =>
+    {
+        policy.RequireClaim("City", "Ýstanbul"); //KURAL
+        
+    });
+});
+
 
 //ClaimProvider için eklendi
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();

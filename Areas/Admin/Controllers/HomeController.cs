@@ -8,7 +8,8 @@ using System.Data;
 
 namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 {
-    [Area("Admin")]    
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -18,14 +19,12 @@ namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Admin")]
         [Route("/Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
         [Route("/Admin/UserList")]
         public async Task<IActionResult> UserList()
         {

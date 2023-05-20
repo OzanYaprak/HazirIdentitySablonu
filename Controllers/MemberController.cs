@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using System.Security.Claims;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -26,6 +27,9 @@ namespace AspNetCoreIdentityApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userclaims = User.Claims.ToList(); //
+            var email = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Email); //
+
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var userViewModel = new UserViewModel

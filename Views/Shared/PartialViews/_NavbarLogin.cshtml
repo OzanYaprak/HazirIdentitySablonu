@@ -10,6 +10,7 @@
             <li><a asp-controller="Member" asp-action="Index" class="dropdown-item">Hesap Bilgileri</a></li>
             <li><a asp-controller="Member" asp-action="PasswordChange" class="dropdown-item">Şifre Değiştir</a></li>
             <li><a asp-controller="Member" asp-action="UserEdit" class="dropdown-item">Bilgileri Güncelle</a></li>
+            <li><a asp-controller="Member" asp-action="Claims" class="dropdown-item">Claims</a></li>
             @if (User.HasClaim(a => a.Type == ClaimTypes.Role && a.Value == "Admin"))
             {
                 <li><a asp-area="Admin" asp-controller="Home" asp-action="Index" class="dropdown-item">Admin Paneli</a></li>

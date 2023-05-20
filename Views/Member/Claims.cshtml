@@ -1,0 +1,31 @@
+﻿@model List<ClaimViewModel>
+@{
+    ViewData["Title"] = "Claims";
+}
+
+
+<h1 class="text-center">Claims</h1>
+
+<div class="align-middle" style="text-align:center;">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ISSUER</th>
+                <th>TYPE</th>
+                <th>VALUE</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="align-middle">@item.Issuer</td>
+                    <td class="align-middle">@item.Type</td>
+                    <td class="align-middle">@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

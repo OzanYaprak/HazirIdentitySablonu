@@ -27,9 +27,6 @@ namespace AspNetCoreIdentityApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userclaims = User.Claims.ToList(); //
-            var email = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Email); //
-
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var userViewModel = new UserViewModel
@@ -193,6 +190,31 @@ namespace AspNetCoreIdentityApp.Controllers
 
             return View(userEditViewModel);
         }
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Claims()
+        {
+            var userclaimlist = User.Claims.Select(a => new ClaimViewModel
+            {
+                Issuer = a.Issuer,
+                Type = a.Type,
+                Value = a.Value
+            }).ToList();
+
+
+            return View(userclaimlist);
+        }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> AccessDenied(string ReturnURL)

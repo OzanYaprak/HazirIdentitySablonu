@@ -1,7 +1,9 @@
+using AspNetCoreIdentityApp.ClaimProvider;
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
 using AspNetCoreIdentityApp.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -19,10 +21,13 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 });
 
 
+//ClaimProvider için eklendi
+builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+
+
 //Email servisi için eklendi.
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
-
 
 
 //Extensions içinde StartupExtensions altýnda yazýlý.

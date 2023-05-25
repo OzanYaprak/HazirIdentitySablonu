@@ -1,9 +1,12 @@
 using AspNetCoreIdentityApp.ClaimProvider;
+using AspNetCoreIdentityApp.Core.Models;
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
+using AspNetCoreIdentityApp.Requirements;
 using AspNetCoreIdentityApp.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -27,11 +30,18 @@ builder.Services.AddAuthorization(options =>
     //Ankarayý silip sadece istanbul olarakta yapabilir veya daha fazla þehir ekleyebiliriz.
     options.AddPolicy("ÝstanbulPolicy", policy =>
     {
-        policy.RequireClaim("City", "Ýstanbul"); //KURAL
-        
+        policy.RequireClaim("City", "Ýstanbul"); //KURAL        
+    });
+
+
+    options.AddPolicy("ExchangePolicy", policy =>
+    {
+        policy.AddRequirements(new ExchangeExpireRequirement()); //ExchangeExpireRequirement içindeki KURAL  
     });
 });
 
+//Requirements için eklendi
+builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 
 //ClaimProvider için eklendi
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();

@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.ViewModels;
+﻿using AspNetCoreIdentityApp.Core.ViewModels;
 
 namespace AspNetCoreIdentityApp.Services
 {

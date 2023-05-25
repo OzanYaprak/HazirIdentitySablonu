@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentityApp.CustomValidations;
+﻿using AspNetCoreIdentityApp.Core.Models;
+using AspNetCoreIdentityApp.CustomValidations;
 using AspNetCoreIdentityApp.Data;
 using AspNetCoreIdentityApp.Localizations;
 using AspNetCoreIdentityApp.Models;

@@ -1,9 +1,10 @@
 ﻿using AspNetCoreIdentityApp.Models;
-using AspNetCoreIdentityApp.ViewModels;
+using AspNetCoreIdentityApp.Core.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Services
 {

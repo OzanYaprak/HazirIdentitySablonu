@@ -1,10 +1,12 @@
 ﻿using AspNetCoreIdentityApp.Models;
-using AspNetCoreIdentityApp.ViewModels;
+using AspNetCoreIdentityApp.Core.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Services;
+using System.Security.Claims;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -52,18 +54,44 @@ namespace AspNetCoreIdentityApp.Controllers
             //KULLANICI YARATMA METODU
             var identityResult = await _userManager.CreateAsync(new AppUser { UserName = request.UserName, Email = request.Email, PhoneNumber = request.Phone }, request.Password);
 
+            if (!identityResult.Succeeded)
+            {
+                //ModelStateExtensions kısmından gelen kod satırı
+                ModelState.AddModelErrorList(identityResult.Errors.Select(a => a.Description).ToList());
+
+                return View();
+            }
+
             if (identityResult.Succeeded)
             {
+                //örneğin bir borsa bilgisi için claim, oluşturulduğu günden itibaren 10 gün erişebilinsin.
+                var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
+
+                //üye olan kullanıcıyı burada yakalıyoruz.
+                var user = await _userManager.FindByNameAsync(request.UserName);
+
+                //üye olan kullanıcıya(user), yazmış olduğumuz claim'i ekliyoruz(exchangeExpireClaim)
+                var claimresult = await _userManager.AddClaimAsync(user, exchangeExpireClaim);
+
+
+                if (!claimresult.Succeeded)
+                {
+                    ModelState.AddModelErrorList(identityResult.Errors.Select(a => a.Description).ToList());
+
+                    return View();
+                }
+
+
                 TempData["SignUpSucceedMessage"] = "Üyelik işleminiz gerçekleşmiştir.";
 
                 return RedirectToAction(nameof(HomeController.SignUp));
             }
 
             //ModelStateExtensions kısmından gelen kod satırı
-            ModelState.AddModelErrorList(identityResult.Errors.Select(a => a.Description).ToList());
+            ModelState.AddModelErrorList(identityResult.Errors.Select(a => a.Description).ToList()); //??Hata verebilir
 
 
-            return View();
+            return View(); //??Hata verebilir
         }
 
 
@@ -84,8 +112,9 @@ namespace AspNetCoreIdentityApp.Controllers
                 return View();
             }
 
-            returnUrl = returnUrl ?? Url.Action("Index", "Home");
+            returnUrl ??= Url.Action("Index", "Home");
 
+            //giriş yapan kullanıcıyı email bilgisinden yakalıyoruz.
             var loginUser = await _userManager.FindByEmailAsync(model.Email);
 
             if (loginUser == null)
@@ -94,23 +123,34 @@ namespace AspNetCoreIdentityApp.Controllers
                 return View();
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(loginUser, model.Password, model.RememberMe, true);
+            //şifre kontrolü yap
+            var passwordcheck = await _userManager.CheckPasswordAsync(loginUser, model.Password);
 
-            if (signInResult.Succeeded)
+            //eğer şifre doğru değil ise / burada sadece şifre yanlış demememizin sebebi kötü niyetli birinin email doğru fakat şifresi yanlış dememesi için.
+            if (!passwordcheck)
             {
-                return Redirect(returnUrl);
+                ModelState.AddModelError(string.Empty, "Email veya şifreniz yanlış");
+                return View();
             }
 
+            //login/signin sonucunu yakalıyoruz
+            var signInResult = await _signInManager.PasswordSignInAsync(loginUser, model.Password, model.RememberMe, true);
+
+            //eğer birden fazla yanlış giriş denemesi yapıldı ise..
             if (signInResult.IsLockedOut)
             {
                 ModelState.AddModelErrorList(new List<string>() { "Çok fazla yanlış giriş denemesi yaptınız, 3 dk sonra tekrar deneyiniz." });
                 return View();
             }
 
-            //ModelStateExtensions kısmından gelen kod satırı
-            ModelState.AddModelErrorList(new List<string>() { "Email veya şifreniz yanlış.", $"Başarısız giriş denemesi 5/{await _userManager.GetAccessFailedCountAsync(loginUser)}" });
+            if (!signInResult.Succeeded)
+            {
+                //ModelStateExtensions kısmından gelen kod satırı
+                ModelState.AddModelErrorList(new List<string>() { "Email veya şifreniz yanlış.", $"Başarısız giriş denemesi 5/{await _userManager.GetAccessFailedCountAsync(loginUser)}" });
+                return View();
+            }
 
-            return View();
+            return Redirect(returnUrl);
         }
 
 

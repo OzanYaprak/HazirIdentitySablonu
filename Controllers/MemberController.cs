@@ -1,6 +1,6 @@
 ﻿using AspNetCoreIdentityApp.Extensions;
 using AspNetCoreIdentityApp.Models;
-using AspNetCoreIdentityApp.ViewModels;
+using AspNetCoreIdentityApp.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using System.Security.Claims;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Controllers
 {
@@ -226,8 +227,18 @@ namespace AspNetCoreIdentityApp.Controllers
 
 
 
+
+        [Authorize(Policy = "ExchangePolicy")]
         [HttpGet]
-        public async Task<IActionResult> AccessDenied(string ReturnURL)
+        public IActionResult ExchangePage()
+        {
+            return View();
+        }
+
+
+
+        [HttpGet]
+        public IActionResult AccessDenied(string ReturnURL)
         {
             string message = string.Empty;
             string message2 = string.Empty;

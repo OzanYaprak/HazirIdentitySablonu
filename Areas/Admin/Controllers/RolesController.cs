@@ -6,6 +6,7 @@ using AspNetCoreIdentityApp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Areas.Admin.Controllers
 {
